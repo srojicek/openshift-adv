@@ -8,8 +8,10 @@ import (
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
 func generateRandomString(n int) string {
@@ -36,17 +38,28 @@ func main() {
 		fmt.Println("Error creating Kubernetes client:", err)
 		return
 	}
-
-	crds, err := clientset.CoreV1().ConfigMaps("default").List(context.TODO(), metav1.ListOptions{LabelSelector: "managed-by=secret-operator"})
+	dynamicClient, err := dynamic.NewForConfig(config)
 	if err != nil {
-		fmt.Println("Error fetching ConfigMaps:", err)
+		fmt.Println("Error creating dynamic client:", err)
 		return
 	}
 
-	for _, cr := range crds.Items {
-		secretName, exists := cr.Data["secretName"]
-		if !exists {
-			fmt.Println("ConfigMap missing 'secretName' key, skipping:", cr.Name)
+	secretGenGVR := schema.GroupVersionResource{
+		Group:    "custom.example.com",
+		Version:  "v1",
+		Resource: "secretgenerators",
+	}
+
+	crs, err := dynamicClient.Resource(secretGenGVR).Namespace("default").List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		fmt.Println("Error fetching SecretGenerators:", err)
+		return
+	}
+
+	for _, cr := range crs.Items {
+		secretName, found, err := unstructuredNestedString(cr.Object, "spec", "secretName")
+		if err != nil || !found {
+			fmt.Println("SecretGenerator missing 'spec.secretName', skipping:", cr.GetName())
 			continue
 		}
 
@@ -78,4 +91,9 @@ func main() {
 	}
 
 	fmt.Println("Secret-operator CronJob finished.")
+}
+
+func unstructuredNestedString(obj map[string]interface{}, fields ...string) (string, bool, error) {
+	val, found, err := unstructured.NestedString(obj, fields...)
+	return val, found, err
 }
