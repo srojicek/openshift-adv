@@ -1,22 +1,3 @@
-Navigate to this folder and RUN:
-cd $PATH/openshift-adv/Day1/2.crd/operator
-
-
-podman build -t default-route-openshift-image-registry.apps-crc.testing/default/secret-operator:latest .
-
-podman login -u kubeadmin -p $(oc whoami -t) default-route-openshift-image-registry.apps-crc.testing
-
-podman push default-route-openshift-image-registry.apps-crc.testing/default/secret-operator:latest
-
-oc apply -f rbac.yaml
-oc apply -f cronjob.yaml
-
-oc get cronjob
-oc get jobs
-
-oc get configmaps -w
-
-oc delete deployment configmap-operator
 
 # Secret Operator for OpenShift
 
@@ -55,7 +36,7 @@ oc apply -f cronjob.yaml
 
 ### Create a Custom Resource (CR)
 ```sh
-oc apply -f cr.yaml
+oc apply -f cr1.yaml
 ```
 
 ## Verify Deployment
@@ -74,9 +55,15 @@ oc get secrets
 oc describe secret <secret-name>
 ```
 
+### Create a second Custom Resource (CR)
+```sh
+oc apply -f cr2.yaml
+```
+
 ## Cleanup
 ```sh
-oc delete -f cr.yaml
+oc delete -f cr1.yaml
+oc delete -f cr2.yaml
 oc delete -f cronjob.yaml
 oc delete -f crd.yaml
 oc delete -f rbac.yaml

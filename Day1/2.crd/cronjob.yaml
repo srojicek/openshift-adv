@@ -6,6 +6,7 @@ spec:
   schedule: "* * * * *"
   jobTemplate:
     spec:
+      ttlSecondsAfterFinished: 300
       template:
         spec:
           serviceAccountName: secret-operator-sa
@@ -14,3 +15,5 @@ spec:
               image: default-route-openshift-image-registry.apps-crc.testing/default/secret-operator:latest
               imagePullPolicy: Always
           restartPolicy: OnFailure
+  successfulJobsHistoryLimit: 1 
+  failedJobsHistoryLimit: 1
