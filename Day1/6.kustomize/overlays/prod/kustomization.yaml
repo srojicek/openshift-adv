@@ -12,12 +12,6 @@ patches:
       name: my-secret-generator
     path: cr-patch.yaml
   - target:
-      kind: Namespace
-    patch: |-
-      - op: replace
-        path: /metadata/name
-        value: prod
-  - target:
       kind: CronJob
       name: secret-generator
     path: cronjob-patch.yaml
