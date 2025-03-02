@@ -7,7 +7,10 @@ resources:
   - ../../base
 
 patches:
-  - path: cr-patch.yaml
+  - target:
+      kind: SecretGenerator
+      name: my-secret-generator
+    path: cr-patch.yaml
   - target:
       kind: Namespace
     patch: |-
