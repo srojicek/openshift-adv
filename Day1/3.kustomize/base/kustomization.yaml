@@ -1,4 +1,2 @@
 resources:
-  - statefulset.yaml
-  - secret.yaml
-  - service.yaml
+  - configmap.yaml

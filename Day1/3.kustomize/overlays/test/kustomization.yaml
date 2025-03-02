@@ -1,14 +1,7 @@
 resources:
 - ../../base
 
-configMapGenerator:
-- literals:
-  - ENV=test
-  name: mysql-config
-  behavior: merge
-
-
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 patches:
-- path: secret.yaml
+- path: configmap-patch.yaml

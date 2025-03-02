@@ -1,16 +1,7 @@
+resources:
+- ../../base
+
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
-namespace: test
-
-resources:
-  - ../../base
-
 patches:
-  - path: cr-patch.yaml
-  - target:
-      kind: Namespace
-    patch: |-
-      - op: replace
-        path: /metadata/name
-        value: test
+- path: deployment-patch.yaml
