@@ -17,3 +17,7 @@ patches:
       - op: replace
         path: /metadata/name
         value: test
+  - target:
+      kind: CronJob
+      name: secret-generator
+    path: cronjob-patch.yaml

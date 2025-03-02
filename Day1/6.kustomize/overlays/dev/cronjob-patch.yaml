@@ -1,0 +1,6 @@
+- op: replace
+  path: /metadata/namespace
+  value: dev
+- op: replace
+  path: /spec/jobTemplate/spec/template/spec/containers/0/image
+  value: default-route-openshift-image-registry.apps-crc.testing/dev/secret-operator:latest
