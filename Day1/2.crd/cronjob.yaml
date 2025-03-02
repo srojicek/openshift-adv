@@ -12,5 +12,5 @@ spec:
           containers:
             - name: secret-generator
               image: default-route-openshift-image-registry.apps-crc.testing/default/secret-operator:latest
-              imagePullPolicy: IfNotPresent
+              imagePullPolicy: Always
           restartPolicy: OnFailure
