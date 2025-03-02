@@ -8,58 +8,52 @@ import (
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
-	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
 func generateRandomString(n int) string {
 	bytes := make([]byte, n)
 	_, err := rand.Read(bytes)
 	if err != nil {
-		fmt.Println("Error generating random string:", err)
-		return ""
+		panic(err)
 	}
 	return hex.EncodeToString(bytes)[:n]
 }
 
 func main() {
-	fmt.Println("Starting secret-operator CronJob...")
-
 	config, err := rest.InClusterConfig()
 	if err != nil {
-		fmt.Println("Error getting in-cluster config:", err)
-		return
+		panic(err)
 	}
 
 	clientset, err := kubernetes.NewForConfig(config)
 	if err != nil {
-		fmt.Println("Error creating Kubernetes client:", err)
-		return
-	}
-	dynamicClient, err := dynamic.NewForConfig(config)
-	if err != nil {
-		fmt.Println("Error creating dynamic client:", err)
-		return
+		panic(err)
 	}
 
-	secretGenGVR := schema.GroupVersionResource{
+	dynamicClient, err := dynamic.NewForConfig(config)
+	if err != nil {
+		panic(err)
+	}
+
+	gvr := metav1.GroupVersionResource{
 		Group:    "custom.example.com",
 		Version:  "v1",
 		Resource: "secretgenerators",
 	}
 
-	crs, err := dynamicClient.Resource(secretGenGVR).Namespace("default").List(context.TODO(), metav1.ListOptions{})
+	crds, err := dynamicClient.Resource(gvr).Namespace("default").List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		fmt.Println("Error fetching SecretGenerators:", err)
-		return
+		panic(err)
 	}
 
-	for _, cr := range crs.Items {
-		secretName, found, err := unstructuredNestedString(cr.Object, "spec", "secretName")
+	for _, cr := range crds.Items {
+		secretName, found, err := unstructured.NestedString(cr.Object, "spec", "secretName")
 		if err != nil || !found {
-			fmt.Println("SecretGenerator missing 'spec.secretName', skipping:", cr.GetName())
+			fmt.Println("Secret name not found in CRD")
 			continue
 		}
 
@@ -89,11 +83,4 @@ func main() {
 			}
 		}
 	}
-
-	fmt.Println("Secret-operator CronJob finished.")
-}
-
-func unstructuredNestedString(obj map[string]interface{}, fields ...string) (string, bool, error) {
-	val, found, err := unstructured.NestedString(obj, fields...)
-	return val, found, err
 }
