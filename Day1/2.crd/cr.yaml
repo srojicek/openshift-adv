@@ -1,0 +1,6 @@
+apiVersion: custom.example.com/v1
+kind: SecretGenerator
+metadata:
+  name: my-secret-generator
+spec:
+  secretName: my-secret

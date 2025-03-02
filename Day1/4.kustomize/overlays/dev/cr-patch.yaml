@@ -1,0 +1,6 @@
+- op: replace
+  path: /metadata/namespace
+  value: dev
+- op: replace
+  path: /spec/secretName
+  value: dev-secret
