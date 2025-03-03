@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: allowed-nginx
-  namespace: my-namespace
+  namespace: default
 spec:
   serviceAccountName: secure-sa
   securityContext:
