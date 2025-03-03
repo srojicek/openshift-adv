@@ -26,7 +26,7 @@ oc apply -f scc.yaml
 
 ### 3️⃣ **Assign the SCC to the ServiceAccount**
 ```sh
-oc adm policy add-scc-to-user restricted-scc -z secure-sa -n my-namespace
+oc adm policy add-scc-to-user restricted-scc -z secure-sa -n default
 ```
 
 ### 4️⃣ **Deploy the Allowed Pod (Runs Successfully)**
