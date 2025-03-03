@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: velero
+  namespace: velero
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: velero
+  template:
+    metadata:
+      labels:
+        name: velero
+    spec:
+      serviceAccountName: velero
+      containers:
+      - name: velero
+        image: velero/velero:v1.11.0
+        args:
+        - server
+        volumeMounts:
+        - mountPath: /credentials
+          name: cloud-credentials
+          readOnly: true
+      volumes:
+      - name: cloud-credentials
+        secret:
+          secretName: cloud-credentials
