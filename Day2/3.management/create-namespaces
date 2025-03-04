@@ -1,0 +1,3 @@
+oc new-project dev
+oc new-project test
+oc new-project prod
