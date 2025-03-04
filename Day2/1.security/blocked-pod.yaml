@@ -3,8 +3,6 @@ kind: Pod
 metadata:
   name: blocked-nginx
   namespace: default
-  annotations:
-    openshift.io/scc: restricted-scc
 spec:
   serviceAccountName: secure-sa
   containers:

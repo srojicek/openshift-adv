@@ -3,8 +3,6 @@ kind: Pod
 metadata:
   name: allowed-nginx
   namespace: default
-  annotations:
-    openshift.io/scc: restricted-scc
 spec:
   serviceAccountName: secure-sa
   containers:
@@ -12,5 +10,6 @@ spec:
       image: bitnami/nginx
       imagePullPolicy: IfNotPresent
       securityContext:
-        runAsUser: 1000
+        runAsNonRoot: true
+        allowPrivilegeEscalation: false
         readOnlyRootFilesystem: true
