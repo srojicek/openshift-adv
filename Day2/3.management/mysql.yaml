@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      serviceAccountName: config-watcher  # ServiceAccount setzen
+      containers:
+      - name: mysql
+        image: mysql:8
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: root-password
+        - name: MYSQL_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-config
+              key: database
+        volumeMounts:
+        - name: mysql-config-volume
+          mountPath: /etc/mysql/conf.d
+        - name: mysql-secret-volume
+          mountPath: /etc/mysql/secrets
+
+      - name: config-watcher
+        image: bitnami/kubectl
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Watching for ConfigMap/Secret changes..."
+          touch /tmp/config.txt /tmp/secret.txt
+          while true; do
+            kubectl get configmap mysql-config -o json | jq -r '.metadata.resourceVersion' > /tmp/config-new.txt
+            kubectl get secret mysql-secret -o json | jq -r '.metadata.resourceVersion' > /tmp/secret-new.txt
+
+            if ! cmp -s /tmp/config.txt /tmp/config-new.txt; then
+              echo "ConfigMap changed. Restarting MySQL pod..."
+              kubectl delete pod -l app=mysql
+              mv /tmp/config-new.txt /tmp/config.txt
+            fi
+
+            if ! cmp -s /tmp/secret.txt /tmp/secret-new.txt; then
+              echo "Secret changed. Restarting MySQL pod..."
+              kubectl delete pod -l app=mysql
+              mv /tmp/secret-new.txt /tmp/secret.txt
+            fi
+
+            sleep 30
+          done
+      volumes:
+      - name: mysql-config-volume
+        configMap:
+          name: mysql-config
+      - name: mysql-secret-volume
+        secret:
+          secretName: mysql-secret
