@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fio-test
+spec:
+  containers:
+  - name: fio-container
+    image: nixery.dev/shell/fio
+    command: [ "sleep", "3600" ]
+    volumeMounts:
+    - mountPath: "/data"
+      name: test-volume
+  volumes:
+  - name: test-volume
+    persistentVolumeClaim:
+      claimName: pvc-example
