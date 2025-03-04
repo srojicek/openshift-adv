@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: pvc-usage-alert
+  namespace: openshift-monitoring
+spec:
+  groups:
+  - name: storage-rules
+    rules:
+    - alert: HighPVCUsage
+      expr: (kubelet_volume_stats_used_bytes{persistentvolumeclaim="pvc-example"} / kubelet_volume_stats_capacity_bytes{persistentvolumeclaim="pvc-example"}) > 0.5
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "PVC {{ $labels.persistentvolumeclaim }} more as 90% used!"

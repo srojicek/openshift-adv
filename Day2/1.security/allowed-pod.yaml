@@ -7,17 +7,10 @@ metadata:
     openshift.io/scc: restricted-scc
 spec:
   serviceAccountName: secure-sa
-  securityContext:
-    runAsUser: 1000
   containers:
     - name: nginx
       image: bitnami/nginx
       imagePullPolicy: IfNotPresent
       securityContext:
-        allowPrivilegeEscalation: false
-      volumeMounts:
-        - name: config-volume
-          mountPath: /etc/nginx
-  volumes:
-    - name: config-volume
-      emptyDir: {}
+        runAsUser: 1000
+        readOnlyRootFilesystem: true

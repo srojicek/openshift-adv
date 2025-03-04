@@ -3,25 +3,19 @@ kind: SecurityContextConstraints
 metadata:
   name: restricted-scc
 allowPrivilegedContainer: false
-allowPrivilegeEscalation: false
 runAsUser:
   type: MustRunAsNonRoot
 seLinuxContext:
   type: MustRunAs
 fsGroup:
-  type: MustRunAs
-  ranges:
-    - min: 1000
-      max: 1000
+  type: RunAsAny
 supplementalGroups:
-  type: MustRunAs
-  ranges:
-    - min: 1000
-      max: 1000
+  type: RunAsAny
 readOnlyRootFilesystem: true
 volumes:
   - configMap
   - emptyDir
-  - persistentVolumeClaim
   - projected
-  - secret
+  - persistentVolumeClaim
+users:
+  - system:serviceaccount:default:secure-sa
