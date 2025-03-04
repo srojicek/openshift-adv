@@ -16,6 +16,7 @@ spec:
       containers:
       - name: mysql
         image: mysql:latest
+        imagePullPolicy: IfNotPresent
         envFrom:
         env:
         - name: MYSQL_USER
