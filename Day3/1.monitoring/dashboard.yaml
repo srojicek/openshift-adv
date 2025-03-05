@@ -8,33 +8,32 @@ metadata:
 data:
   crc-grafana-dashboard.json: |
     {
-      "dashboard": {
-        "id": null,
-        "title": "CRC Kubernetes Monitoring",
-        "description": "Dashboard for monitoring CRC nodes, pods, and services using Prometheus Service Discovery",
-        "panels": [
-          {
-            "title": "Active Pods per Namespace",
-            "type": "table",
-            "targets": [
-              {
-                "expr": "count(up{job='kubernetes-pods'} == 1) by (namespace, pod)",
-                "legendFormat": "{{namespace}} / {{pod}}",
-                "interval": "5m"
-              }
-            ],
-            "columns": [
-              { "text": "Namespace", "value": "namespace" },
-              { "text": "Pod", "value": "pod" },
-              { "text": "Status", "value": "value" }
-            ],
-            "gridPos": { "x": 0, "y": 12, "w": 24, "h": 6 }
+      "id": null,
+      "uid": "crc-monitoring",
+      "title": "CRC Kubernetes Monitoring",
+      "description": "Dashboard for monitoring CRC nodes, pods, and services using Prometheus Service Discovery",
+      "schemaVersion": 18,
+      "version": 1,
+      "panels": [
+        {
+          "title": "Active Pods per Namespace",
+          "type": "table",
+          "targets": [
+            {
+              "expr": "count(up{job='kubernetes-pods'} == 1) by (namespace, pod)",
+              "legendFormat": "{{namespace}} / {{pod}}",
+              "interval": "5m"
+            }
+          ],
+          "gridPos": { "x": 0, "y": 12, "w": 24, "h": 6 },
+          "options": {
+            "showHeader": true
           }
-        ],
-        "time": {
-          "from": "now-1h",
-          "to": "now"
         }
+      ],
+      "time": {
+        "from": "now-1h",
+        "to": "now"
       }
     }
 ---
