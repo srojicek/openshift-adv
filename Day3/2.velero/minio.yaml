@@ -27,14 +27,19 @@ spec:
         - name: MINIO_SECRET_KEY
           value: "minioadmin"
         ports:
-        - containerPort: 9000
-        - containerPort: 9001
+        - name: minio-api
+          containerPort: 9000
+          protocol: TCP
+        - name: minio-console
+          containerPort: 9001
+          protocol: TCP
         volumeMounts:
         - name: minio-storage
           mountPath: /data
       volumes:
       - name: minio-storage
         emptyDir: {}
+
 ---
 apiVersion: v1
 kind: Service
@@ -45,9 +50,11 @@ spec:
   selector:
     app: minio
   ports:
-    - protocol: TCP
+    - name: minio-api
+      protocol: TCP
       port: 9000
       targetPort: 9000
-    - protocol: TCP
+    - name: minio-console
+      protocol: TCP
       port: 9001
       targetPort: 9001
