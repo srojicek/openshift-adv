@@ -46,9 +46,9 @@ To interact with Velero, you need to install the Velero CLI on your local machin
 
 ### ** Installation on Linux/macOS**
 ```sh
-curl -LO https://github.com/vmware-tanzu/velero/releases/latest/download/velero-linux-amd64.tar.gz
-tar -xvf velero-linux-amd64.tar.gz
-sudo mv velero /usr/local/bin/
+curl -LO https://github.com/vmware-tanzu/velero/releases/download/v1.15.2/velero-v1.15.2-linux-amd64.tar.gz
+tar -xvf velero-v1.15.2-linux-amd64.tar.gz
+sudo mv velero-v1.15.2-linux-amd64/velero /usr/local/bin/
 ```
 
 ### ** Verify Installation**

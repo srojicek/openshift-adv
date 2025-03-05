@@ -42,9 +42,15 @@ oc apply -f service-discovery.yaml
 oc apply -f grafana-datasource.yaml
 ```
 
+## **7. `dashboard.yaml`** (add Dashboard to Grafana)
+```sh
+oc apply -f dashboard.yaml
+```
+
 After applying all these manifests, restart Prometheus to ensure the updated configurations take effect:
 ```sh
 oc delete pod -n monitoring -l app=prometheus
+oc delete pod -n monitoring -l app=grafana
 ```
 
 ---

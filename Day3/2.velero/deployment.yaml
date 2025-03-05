@@ -14,6 +14,8 @@ spec:
         app: velero
     spec:
       serviceAccountName: velero-sa
+      securityContext:
+        runAsNonRoot: true
       volumes:
         - name: velero-storage
           persistentVolumeClaim:
@@ -26,3 +28,10 @@ spec:
           volumeMounts:
             - mountPath: /backups
               name: velero-storage
+          securityContext:
+            allowPrivilegeEscalation: false 
+            runAsNonRoot: true  
+            capabilities:
+              drop: ["ALL"]  
+            seccompProfile:
+              type: RuntimeDefault  
