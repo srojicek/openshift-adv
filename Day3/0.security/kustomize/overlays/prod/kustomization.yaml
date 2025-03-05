@@ -4,12 +4,6 @@ resources:
 nameSuffix: -prod
 
 apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomizationresources:
-- ../../base
-
-nameSuffix: -dev
-
-apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 patches:
