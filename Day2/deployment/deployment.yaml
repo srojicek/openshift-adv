@@ -11,6 +11,7 @@ spec:
     metadata:
       labels:
         app: nginx
+        new-label: Alex
     spec:
       imagePullSecrets:
         - name: ghcr-pull-secret
