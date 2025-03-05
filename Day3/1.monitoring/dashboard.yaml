@@ -14,52 +14,21 @@ data:
         "description": "Dashboard for monitoring CRC nodes, pods, and services using Prometheus Service Discovery",
         "panels": [
           {
-            "title": "CPU Usage per Node",
-            "type": "graph",
+            "title": "Active Pods per Namespace",
+            "type": "table",
             "targets": [
               {
-                "expr": "sum(rate(node_cpu_seconds_total{mode!='idle'}[5m])) by (node)",
-                "legendFormat": "{{node}}",
+                "expr": "count(up{job='kubernetes-pods'} == 1) by (namespace, pod)",
+                "legendFormat": "{{namespace}} / {{pod}}",
                 "interval": "5m"
               }
             ],
-            "gridPos": { "x": 0, "y": 0, "w": 12, "h": 6 }
-          },
-          {
-            "title": "Memory Usage per Node",
-            "type": "graph",
-            "targets": [
-              {
-                "expr": "sum(node_memory_Active_bytes) by (node)",
-                "legendFormat": "{{node}}",
-                "interval": "5m"
-              }
+            "columns": [
+              { "text": "Namespace", "value": "namespace" },
+              { "text": "Pod", "value": "pod" },
+              { "text": "Status", "value": "value" }
             ],
-            "gridPos": { "x": 12, "y": 0, "w": 12, "h": 6 }
-          },
-          {
-            "title": "Running Pods per Namespace",
-            "type": "graph",
-            "targets": [
-              {
-                "expr": "count(kube_pod_info) by (namespace)",
-                "legendFormat": "{{namespace}}",
-                "interval": "5m"
-              }
-            ],
-            "gridPos": { "x": 0, "y": 6, "w": 12, "h": 6 }
-          },
-          {
-            "title": "Service Request Rate",
-            "type": "graph",
-            "targets": [
-              {
-                "expr": "sum(rate(http_requests_total[5m])) by (service)",
-                "legendFormat": "{{service}}",
-                "interval": "5m"
-              }
-            ],
-            "gridPos": { "x": 12, "y": 6, "w": 12, "h": 6 }
+            "gridPos": { "x": 0, "y": 12, "w": 24, "h": 6 }
           }
         ],
         "time": {
@@ -68,7 +37,6 @@ data:
         }
       }
     }
-
 ---
 
 apiVersion: v1
