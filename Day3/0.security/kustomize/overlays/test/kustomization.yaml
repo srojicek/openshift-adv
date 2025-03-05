@@ -22,3 +22,25 @@ patches:
     kind: Secret
     name: cs-mysql-secret
     version: v1
+- target:
+    group: apps
+    version: v1
+    kind: StatefulSet
+    name: mysql
+  patch: |-
+    - op: replace
+      path: /spec/selector/matchLabels/app
+      value: mysql-dev
+    - op: replace
+      path: /spec/template/metadata/labels/app
+      value: mysql-dev
+- target:
+    group: ""
+    version: v1
+    kind: Service
+    name: mysql
+  patch: |-
+    - op: replace
+      path: /spec/selector/app
+      value: mysql-dev
+
