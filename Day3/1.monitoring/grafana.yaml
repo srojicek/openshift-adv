@@ -24,10 +24,15 @@ spec:
         volumeMounts:
         - name: datasource-config
           mountPath: /etc/grafana/provisioning/datasources
+        - name: dashboards
+          mountPath: /var/lib/grafana/dashboards
       volumes:
       - name: datasource-config
         configMap:
           name: grafana-datasource
+      - name: dashboards
+        configMap:
+          name: crc-grafana-dashboard
 ---
 apiVersion: v1
 kind: Service
