@@ -1,0 +1,9 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: node-route
+  labels:
+    app: node-app
+spec:
+  to:
+    name: node-service

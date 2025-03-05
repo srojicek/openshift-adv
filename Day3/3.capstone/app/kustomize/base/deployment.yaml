@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-app
+spec:
+  replicas: 3 
+  selector:
+    matchLabels:
+      app: node-app
+  template:
+    metadata:
+      labels:
+        app: node-app
+    spec:
+      imagePullSecrets:
+        - name: ghcr-pull-secret
+      containers:
+        - name: node-app
+          image: IMAGE_PLACEHOLDER
+          env:
+            - name: DB_HOST
+              value: mysql
+            - name: USER
+              valueFrom:
+                secretKeyRef:
+                  name: cs-mysql-secret
+                  key: MYSQL_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cs-mysql-secret
+                  key: MYSQL_PASSWORD
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: cs-mysql-secret
+                  key: MYSQL_DATABASE
+            - name: CAPSTONE
+              value: "Blue"
+          ports:
+            - containerPort: 3000

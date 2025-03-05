@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: velero
+  namespace: velero
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: velero
+  template:
+    metadata:
+      labels:
+        app: velero
+    spec:
+      serviceAccountName: velero-sa
+      volumes:
+        - name: velero-storage
+          persistentVolumeClaim:
+            claimName: velero-backup-pvc
+      containers:
+        - name: velero
+          image: velero/velero:v1.10.2
+          args:
+            - server
+          volumeMounts:
+            - mountPath: /backups
+              name: velero-storage

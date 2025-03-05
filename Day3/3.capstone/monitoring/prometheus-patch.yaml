@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: monitoring
+  labels:
+    name: prometheus-config
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+
+    scrape_configs:
+      - job_name: 'prometheus'
+        static_configs:
+          - targets: ['localhost:9090']
+
+      # MySQL Exporters for dev, test, and prod
+      - job_name: 'mysql'
+        static_configs:
+          - targets:
+            - mysql-exporter-dev.monitoring:9104
+            - mysql-exporter-test.monitoring:9104
+            - mysql-exporter-prod.monitoring:9104
+
+      # Node.js Application Metrics
+      - job_name: 'nodejs-app'
+        static_configs:
+          - targets:
+            - nodejs-app.monitoring:3000
+
+
+# oc patch configmap prometheus-config -n monitoring --type=merge --patch "$(cat prometheus-patch.yaml)"

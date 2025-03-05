@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-exporter-dev
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-exporter-dev
+  template:
+    metadata:
+      labels:
+        app: mysql-exporter-dev
+    spec:
+      containers:
+      - name: mysql-exporter
+        image: prom/mysqld-exporter:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: DATA_SOURCE_NAME
+          value: "developer:password@(mysql-dev.db:3306)/"
+        ports:
+        - containerPort: 9104
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-exporter-dev
+  namespace: monitoring
+spec:
+  selector:
+    app: mysql-exporter-dev
+  ports:
+  - protocol: TCP
+    port: 9104
+    targetPort: 9104

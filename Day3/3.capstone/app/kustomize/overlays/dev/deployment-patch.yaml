@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-app
+spec:
+  selector:
+    matchLabels:
+      app: node-app
+  template:
+    metadata:
+      labels:
+        app: node-app
+    spec:
+      containers:
+        - name: node-app
+          env:
+            - name: CAPSTONE
+              value: "DEV"
+            - name: DB_HOST
+              value: mysql-dev.db.svc.cluster.local

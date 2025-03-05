@@ -1,0 +1,13 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: minio-console
+  namespace: minio
+spec:
+  to:
+    kind: Service
+    name: minio-service
+  port:
+    targetPort: 9001
+  tls:
+    termination: edge
