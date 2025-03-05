@@ -18,10 +18,12 @@ spec:
         runAsNonRoot: true
       volumes:
         - name: velero-storage
-          emptyDir: {} 
+          emptyDir: {}
       containers:
         - name: velero
           image: velero/velero:v1.10.2
+          command:
+            - /velero
           args:
             - server
           volumeMounts:
