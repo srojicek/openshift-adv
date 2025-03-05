@@ -63,6 +63,13 @@ Client:
 
 ---
 
+### ** Install CRDs **
+```sh
+velero install --crds-only --dry-run -o yaml | oc apply -f -
+```
+
+
+
 ## **4️⃣ Creating a Backup of the `db` Namespace**
 Once Velero is deployed, create a backup of the `db` namespace:
 ```sh
