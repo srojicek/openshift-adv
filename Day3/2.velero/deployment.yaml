@@ -36,3 +36,38 @@ spec:
               drop: ["ALL"]
             seccompProfile:
               type: RuntimeDefault
+
+---
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: velero-node-agent
+  namespace: velero
+  labels:
+    component: node-agent
+spec:
+  selector:
+    matchLabels:
+      component: node-agent
+  template:
+    metadata:
+      labels:
+        component: node-agent
+    spec:
+      serviceAccountName: velero-sa
+      volumes:
+        - name: host-pods
+          hostPath:
+            path: /var/lib/kubelet/pods
+      containers:
+        - name: restic
+          image: velero/velero:v1.10.2
+          command:
+            - /velero
+          args:
+            - node-agent
+          volumeMounts:
+            - name: host-pods
+              mountPath: /var/lib/kubelet/pods
+              mountPropagation: HostToContainer
