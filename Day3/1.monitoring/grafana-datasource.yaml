@@ -3,14 +3,12 @@ kind: ConfigMap
 metadata:
   name: grafana-datasource
   namespace: monitoring
-  labels:
-    grafana_datasource: "true"
 data:
-  prometheus-datasource.yaml: |
+  datasources.yaml: |
     apiVersion: 1
     datasources:
       - name: Prometheus
         type: prometheus
         access: proxy
-        url: http://prometheus-service.monitoring:9090
+        url: http://prometheus-service.monitoring.svc:9090
         isDefault: true
