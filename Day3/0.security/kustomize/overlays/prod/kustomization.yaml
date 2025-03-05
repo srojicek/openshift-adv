@@ -11,5 +11,6 @@ patches:
   target:
     kind: Secret
     name: cs-mysql-secret
+    namespace: prod  
 - path: secret.yaml
 - path: networkpolicy.yaml
