@@ -19,6 +19,27 @@ spec:
       - name: grafana
         image: quay.io/openshift/origin-grafana:latest
         imagePullPolicy: IfNotPresent
+        env:
+        - name: GF_SECURITY_ADMIN_USER
+          value: admin
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          value: admin
+        - name: GF_AUTH_DISABLE_LOGIN_FORM
+          value: "false"
+        - name: GF_AUTH_ANONYMOUS_ENABLED
+          value: "false"
+        - name: GF_USERS_ALLOW_SIGN_UP
+          value: "false"
+        - name: GF_USERS_DEFAULT_THEME
+          value: "light"
+        - name: GF_USERS_ALLOW_ORG_CREATE
+          value: "false"
+        - name: GF_SECURITY_ALLOW_EMBEDDING
+          value: "true"
+        - name: GF_SECURITY_DISABLE_BRUTE_FORCE_LOGIN_PROTECTION
+          value: "true"
+        - name: GF_SECURITY_ADMIN_PASSWORD_RESET
+          value: "false"
         ports:
         - containerPort: 3000
         volumeMounts:
