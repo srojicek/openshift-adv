@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: crc-grafana-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  crc-grafana-dashboard.json: |
+    {
+      "dashboard": {
+        "id": null,
+        "title": "CRC Kubernetes Monitoring",
+        "description": "Dashboard for monitoring CRC nodes, pods, and services using Prometheus Service Discovery",
+        "panels": [
+          {
+            "title": "CPU Usage per Node",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "sum(rate(node_cpu_seconds_total{mode!='idle'}[5m])) by (node)",
+                "legendFormat": "{{node}}",
+                "interval": "5m"
+              }
+            ],
+            "gridPos": { "x": 0, "y": 0, "w": 12, "h": 6 }
+          },
+          {
+            "title": "Memory Usage per Node",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "sum(node_memory_Active_bytes) by (node)",
+                "legendFormat": "{{node}}",
+                "interval": "5m"
+              }
+            ],
+            "gridPos": { "x": 12, "y": 0, "w": 12, "h": 6 }
+          },
+          {
+            "title": "Running Pods per Namespace",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "count(kube_pod_info) by (namespace)",
+                "legendFormat": "{{namespace}}",
+                "interval": "5m"
+              }
+            ],
+            "gridPos": { "x": 0, "y": 6, "w": 12, "h": 6 }
+          },
+          {
+            "title": "Service Request Rate",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "sum(rate(http_requests_total[5m])) by (service)",
+                "legendFormat": "{{service}}",
+                "interval": "5m"
+              }
+            ],
+            "gridPos": { "x": 12, "y": 6, "w": 12, "h": 6 }
+          }
+        ],
+        "time": {
+          "from": "now-1h",
+          "to": "now"
+        }
+      }
+    }
