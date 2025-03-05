@@ -5,9 +5,18 @@ nameSuffix: -test
 
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-patchesStrategicMerge:
-- ns-secret.yaml
+resources:
+- ../../base
+
+nameSuffix: -dev
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
 
 patches:
+- path: ns-secret.yaml
+  target:
+    kind: Secret
+    name: cs-mysql-secret
 - path: secret.yaml
 - path: networkpolicy.yaml

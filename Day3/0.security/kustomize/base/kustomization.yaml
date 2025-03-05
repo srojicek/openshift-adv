@@ -2,5 +2,6 @@ resources:
   - statefulset.yaml
   - secret.yaml
   - service.yaml
-  - pvc-yaml
+  - pvc.yaml
   - ns-secret.yaml
+  - networkpolicy.yaml
