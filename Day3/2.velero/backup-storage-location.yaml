@@ -4,8 +4,10 @@ metadata:
   name: default
   namespace: velero
 spec:
-  provider: local
+  provider: aws
   objectStorage:
-    bucket: velero-local-backups
+    bucket: velero-backups
   config:
-    localVolumePath: /backups
+    region: minio
+    s3Url: http://minio.velero.svc:9000
+    s3ForcePathStyle: "true"
