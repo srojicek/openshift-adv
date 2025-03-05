@@ -40,3 +40,20 @@ spec:
   ports:
     - protocol: TCP
       port: 3000
+
+---
+
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  to:
+    kind: Service
+    name: grafana-service 
+  port:
+    targetPort: 3000  
+  tls:
+    termination: edge
+  wildcardPolicy: None
