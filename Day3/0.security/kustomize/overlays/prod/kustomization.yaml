@@ -7,10 +7,19 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 patches:
-- path: ns-secret.yaml
+- path: ns-secret-patch.yaml
   target:
     kind: Secret
     name: cs-mysql-secret
-    namespace: prod  
+    namespace: prod
 - path: secret.yaml
 - path: networkpolicy.yaml
+- patch: |-
+    - op: add
+      path: /metadata/namespace
+      value: prod
+  target:
+    kind: Secret
+    name: cs-mysql-secret
+    version: v1
+

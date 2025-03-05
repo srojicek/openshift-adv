@@ -11,6 +11,13 @@ patches:
   target:
     kind: Secret
     name: cs-mysql-secret
-    namespace: dev
 - path: secret.yaml
 - path: networkpolicy.yaml
+- patch: |-
+    - op: add
+      path: /metadata/namespace
+      value: dev
+  target:
+    kind: Secret
+    name: cs-mysql-secret
+    version: v1

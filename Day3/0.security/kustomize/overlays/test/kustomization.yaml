@@ -14,3 +14,11 @@ patches:
     namespace: test
 - path: secret.yaml
 - path: networkpolicy.yaml
+- patch: |-
+    - op: add
+      path: /metadata/namespace
+      value: test
+  target:
+    kind: Secret
+    name: cs-mysql-secret
+    version: v1

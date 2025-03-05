@@ -18,3 +18,18 @@ spec:
               value: "DEV"
             - name: DB_HOST
               value: mysql-dev.db.svc.cluster.local
+            - name: USER
+              valueFrom:
+                secretKeyRef:
+                  name: cs-mysql-secret-dev
+                  key: MYSQL_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cs-mysql-secret-dev
+                  key: MYSQL_PASSWORD
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: cs-mysql-secret-dev
+                  key: MYSQL_DATABASE
