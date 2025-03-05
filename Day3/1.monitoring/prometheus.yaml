@@ -76,3 +76,18 @@ spec:
   - protocol: TCP
     port: 9090
     targetPort: 9090
+
+---
+
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  to:
+    kind: Service
+    name: prometheus-service 
+  port:
+    targetPort: 9090
+  wildcardPolicy: None
