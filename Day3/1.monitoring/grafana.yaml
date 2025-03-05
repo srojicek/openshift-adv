@@ -26,6 +26,8 @@ spec:
           mountPath: /etc/grafana/provisioning/datasources
         - name: dashboards
           mountPath: /var/lib/grafana/dashboards
+        - name: dashboard-provisioning
+          mountPath: /etc/grafana/provisioning/dashboards
       volumes:
       - name: datasource-config
         configMap:
@@ -33,6 +35,9 @@ spec:
       - name: dashboards
         configMap:
           name: crc-grafana-dashboard
+      - name: dashboard-provisioning
+        configMap:
+          name: grafana-dashboard-provisioning
 ---
 apiVersion: v1
 kind: Service
