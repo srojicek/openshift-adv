@@ -86,7 +86,7 @@ If you need to verify, go to **Configuration → Data Sources**, and you should 
 
 ---
 
-## **✅ Summary**
+## ** Summary**
 - **`namespace.yaml`** → Creates `monitoring` namespace
 - **`prometheus.yaml`** → Deploys Prometheus
 - **`grafana.yaml`** → Deploys Grafana

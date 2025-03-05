@@ -49,10 +49,20 @@ spec:
         volumeMounts:
         - name: config-volume
           mountPath: /etc/prometheus
+        - name: prometheus-data
+          mountPath: /prometheus
       volumes:
       - name: config-volume
         configMap:
           name: prometheus-config
+      - name: prometheus-data
+        emptyDir: {}
+  containers:
+  - name: prometheus
+    image: prom/prometheus:latest
+    volumeMounts:
+    - name: prometheus-data
+      mountPath: /prometheus
 ---
 apiVersion: v1
 kind: Service
