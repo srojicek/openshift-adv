@@ -10,8 +10,8 @@ data:
     {
       "id": null,
       "uid": "crc-monitoring",
-      "title": "CRC Kubernetes Monitoring",
-      "description": "Dashboard for monitoring CRC nodes, pods, and services using Prometheus Service Discovery",
+      "title": "CRC Kubernetes Pod Monitoring",
+      "description": "Dashboard for monitoring Kubernetes pods using Prometheus Service Discovery",
       "schemaVersion": 18,
       "version": 1,
       "panels": [
@@ -20,15 +20,51 @@ data:
           "type": "table",
           "targets": [
             {
-              "expr": "count(up{job='kubernetes-pods'} == 1) by (namespace, pod)",
+              "expr": "kube_pod_status_ready{condition='true'}",
               "legendFormat": "{{namespace}} / {{pod}}",
               "interval": "5m"
             }
           ],
-          "gridPos": { "x": 0, "y": 12, "w": 24, "h": 6 },
+          "gridPos": { "x": 0, "y": 0, "w": 24, "h": 6 },
           "options": {
             "showHeader": true
           }
+        },
+        {
+          "title": "CPU Usage per Pod",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "rate(container_cpu_usage_seconds_total{container!=""}[5m])",
+              "legendFormat": "{{namespace}} / {{pod}}",
+              "interval": "5m"
+            }
+          ],
+          "gridPos": { "x": 0, "y": 6, "w": 12, "h": 6 }
+        },
+        {
+          "title": "Memory Usage per Pod",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "container_memory_usage_bytes{container!=""}",
+              "legendFormat": "{{namespace}} / {{pod}}",
+              "interval": "5m"
+            }
+          ],
+          "gridPos": { "x": 12, "y": 6, "w": 12, "h": 6 }
+        },
+        {
+          "title": "Restart Count per Pod",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "kube_pod_container_status_restarts_total",
+              "legendFormat": "{{namespace}} / {{pod}}",
+              "interval": "5m"
+            }
+          ],
+          "gridPos": { "x": 0, "y": 12, "w": 24, "h": 6 }
         }
       ],
       "time": {
