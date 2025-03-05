@@ -13,24 +13,11 @@ spec:
     metadata:
       labels:
         app: mysql
-    spec:
-      securityContext:
-        runAsNonRoot: true
-        fsGroup: 999
+    spec:  
       containers:
       - name: mysql
         image: mysql:latest
         imagePullPolicy: IfNotPresent
-        securityContext:
-          allowPrivilegeEscalation: false
-          runAsNonRoot: true
-          readOnlyRootFilesystem: false  # MySQL braucht Schreibrechte
-          capabilities:
-            drop:
-              - ALL
-          seccompProfile:
-            type: RuntimeDefault
-        envFrom:
         env:
         - name: MYSQL_USER
           valueFrom:
