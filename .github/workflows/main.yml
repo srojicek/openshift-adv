@@ -1,11 +1,11 @@
-name: Dockerbasic
+name: OpenShift
 
 env:
-  
+  OPENSHIFT_SERVER: ${{ secrets.OPENSHIFT_SERVER }}
+  OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
+  OPENSHIFT_NAMESPACE: ${{ secrets.OPENSHIFT_NAMESPACE }}
 
   APP_NAME: ""
-
-  APP_PORT: ""
 
   IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
   IMAGE_REGISTRY_USER: ${{ github.actor }}
@@ -14,7 +14,6 @@ env:
   IMAGE_TAGS: "1.0.${{ github.run_number }}"
 
 on:
-  # https://docs.github.com/en/actions/reference/events-that-trigger-workflows
   workflow_dispatch:
   push:
     # Edit to the branch(es) you want to build and deploy on each push.
@@ -22,10 +21,16 @@ on:
 
 jobs:
  
-  docker-basic:
-    name: Build Dockerimage
+  openshift-ci-cd:
+    # 🖊️ Uncomment this if you are using CRDA scan step above
+    # needs: crda-scan
+    name: Build and deploy to OpenShift
     runs-on: ubuntu-latest
     environment: production
+
+    outputs:
+      ROUTE: ${{ steps.deploy-and-expose.outputs.route }}
+      SELECTOR: ${{ steps.deploy-and-expose.outputs.selector }}
 
     steps:
     - name: Check out repository
@@ -41,7 +46,7 @@ jobs:
       run: |
         echo "IMAGE_TAGS=latest ${GITHUB_SHA::12}" | tee -a $GITHUB_ENV
 
-    # https://github.com/redhat-actions/buildah-build#readm
+    # https://github.com/redhat-actions/buildah-build#readme
     - name: Build from Dockerfile
       id: build-image
       uses: redhat-actions/buildah-build@v2
@@ -61,6 +66,41 @@ jobs:
         registry: ${{ env.IMAGE_REGISTRY }}
         username: ${{ env.IMAGE_REGISTRY_USER }}
         password: ${{ env.IMAGE_REGISTRY_PASSWORD }}
-    # The path the image was pushed to is now stored in ${{ steps.push-image.outputs.registry-path }}
+
+    - name: Install oc
+      uses: redhat-actions/openshift-tools-installer@v1
+      with:
+        oc: 4
+
+    # https://github.com/redhat-actions/oc-login#readme
+    - name: Log in to OpenShift
+      uses: redhat-actions/oc-login@v1
+      with:
+        openshift_server_url: ${{ env.OPENSHIFT_SERVER }}
+        openshift_token: ${{ env.OPENSHIFT_TOKEN }}
+        insecure_skip_tls_verify: true
+        namespace: ${{ env.OPENSHIFT_NAMESPACE }}
+
+    - name: my deployment 
+      run: |
+        export IMAGE=${{ steps.push-image.outputs.registry-path }}
+        export OPENSHIFT_NAMESPACE=${{ env.OPENSHIFT_NAMESPACE }}
+
+        echo ${{ steps.push-image.outputs.registry-path }}
+
+        sed -i 's|\IMAGE_PLACEHOLDER|'"$IMAGE"'|g' Day2/deployment/deployment.yaml
+        
+        oc apply -f Day2/deployment/deployment.yaml -n $OPENSHIFT_NAMESPACE
+        oc apply -f Day1/network/service.yaml -n $OPENSHIFT_NAMESPACE      
+        
+        oc get pods
+        oc get svc
+
+    - name: create route
+      run: | 
+        export OPENSHIFT_NAMESPACE=${{ env.OPENSHIFT_NAMESPACE }}
+        oc apply -f Day1/network/route.yaml -n $OPENSHIFT_NAMESPACE
+
+        oc get route
         
     
