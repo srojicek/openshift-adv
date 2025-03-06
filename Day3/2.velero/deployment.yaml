@@ -55,7 +55,7 @@ spec:
       labels:
         component: node-agent
     spec:
-      serviceAccountName: velero
+      serviceAccountName: velero-sa
       containers:
       - name: restic
         image: velero/velero:v1.15.2
