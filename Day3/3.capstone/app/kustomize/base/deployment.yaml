@@ -20,7 +20,7 @@ spec:
               value: mysql
             - name: DB_PORT
               value: "3306"
-            - name: USER
+            - name: DB_USER
               valueFrom:
                 secretKeyRef:
                   name: cs-mysql-secret
