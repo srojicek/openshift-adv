@@ -38,6 +38,7 @@ spec:
               type: RuntimeDefault
 
 ---
+
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -53,17 +54,16 @@ spec:
         component: node-agent
     spec:
       serviceAccountName: velero-sa
-      securityContext:
-        runAsUser: 1000  # Setzt explizit eine nicht-root UID
       containers:
       - name: restic
         image: velero/velero:v1.15.2
         command:
           - /velero
         args:
-          - node-agent
+          - restic
+          - server 
         securityContext:
-          runAsUser: 1000  # Explizite nicht-root UID setzen
+          runAsUser: 1000
           allowPrivilegeEscalation: false
           capabilities:
             drop: ["ALL"]
