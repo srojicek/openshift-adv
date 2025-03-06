@@ -99,6 +99,7 @@ If you need to verify, go to **Configuration → Data Sources**, and you should 
 - **`cr.yaml`** → Grants Prometheus cluster monitoring permissions
 - **`service-discovery.yaml`** → Enables Prometheus Service Discovery
 - **`grafana-datasource.yaml`** → Configures Prometheus in Grafana automatically
+- **`kube-state-metrics.yaml`** → Pod-Data provider -> will not work
 
 ---
 **Copyright (c) 2025 by Alexander Kolin. All rights reserved.**

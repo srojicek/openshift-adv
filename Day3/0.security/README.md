@@ -1,5 +1,13 @@
 # MySQL Deployment in Kubernetes
 
+## **0. Deploy BASIC Security**
+
+```sh
+cd openshift-adv/Day3/0.Security/basics
+oc apply -f ./users 
+oc apply -f ./ 
+```
+This applies the roles restrickted rules to the user, deploys Namespaces and DENYALL NetworkPolicy.
 
 ## **1. Deploying MySQL using Kustomize**
 Kustomize allows for flexible deployments across different environments. Deploy MySQL in `db` for namespaces `dev`, `test`, and `prod` using:

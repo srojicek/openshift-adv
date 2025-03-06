@@ -23,55 +23,22 @@ podman build -t default-route-openshift-image-registry.apps-crc.testing/prod/cap
 
 ### Push to OpenShift Internal Registry
 ```sh
-oc login -u kubeadmin -p nobleprog123.
-oc new-project default
+oc login -u kubeadmin https://api.crc.testing:6443
 podman login -u kubeadmin -p $(oc whoami -t) default-route-openshift-image-registry.apps-crc.testing
 podman push default-route-openshift-image-registry.apps-crc.testing/dev/capstone-app:latest
 podman push default-route-openshift-image-registry.apps-crc.testing/test/capstone-app:latest
 podman push default-route-openshift-image-registry.apps-crc.testing/prod/capstone-app:latest
 ```
 
-### Deploy the Operator
+
+## Deployment with Kustomize
 ```sh
-oc apply -f rbac.yaml
-oc apply -f crd.yaml
-oc apply -f cronjob.yaml
+cd ..
+oc apply -k kustomize/overlays/dev
+oc apply -k kustomize/overlays/test
+oc apply -k kustomize/overlays/prod
 ```
 
-### Create a Custom Resource (CR)
-```sh
-oc apply -f cr1.yaml
-```
-
-## Verify Deployment
-### Check if the CronJob is created
-```sh
-oc get cronjobs
-```
-
-### List Secrets created by the Operator
-```sh
-oc get secrets
-```
-
-### Describe a Secret to confirm content
-```sh
-oc describe secret <secret-name>
-```
-
-### Create a second Custom Resource (CR)
-```sh
-oc apply -f cr2.yaml
-```
-
-## Cleanup
-```sh
-oc delete -f cr1.yaml
-oc delete -f cr2.yaml
-oc delete -f cronjob.yaml
-oc delete -f crd.yaml
-oc delete -f rbac.yaml
-```
 
 ---
 **Copyright (c) 2025 by Alexander Kolin. All rights reserved.**
