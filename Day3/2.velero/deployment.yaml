@@ -55,13 +55,12 @@ spec:
     spec:
       serviceAccountName: velero-sa
       containers:
-      - name: restic
+      - name: velero
         image: velero/velero:v1.15.2
         command:
           - /velero
         args:
-          - restic
-          - server 
+          - node-agent
         securityContext:
           runAsUser: 1000
           allowPrivilegeEscalation: false
@@ -70,7 +69,7 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
-        - mountPath: /host_pods
+        - mountPath: /var/lib/kubelet/pods
           name: host-pods
           mountPropagation: HostToContainer
       volumes:
