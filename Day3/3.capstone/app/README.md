@@ -14,7 +14,7 @@ This operator generates or updates Kubernetes Secrets based on Custom Resources 
 ### Build the Operator Image
 
 ```sh
-cd $PATH/openshift-adv/Day1/2.crd/
+cd $PATH/openshift-adv/Day3/3.capstone/app/docker
 
 podman build -t default-route-openshift-image-registry.apps-crc.testing/dev/capstone-app:latest .
 podman build -t default-route-openshift-image-registry.apps-crc.testing/test/capstone-app:latest .
