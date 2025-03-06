@@ -12,8 +12,6 @@ spec:
       labels:
         app: node-app
     spec:
-      imagePullSecrets:
-        - name: ghcr-pull-secret
       containers:
         - name: node-app
           image: IMAGE_PLACEHOLDER
