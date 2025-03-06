@@ -44,6 +44,8 @@ kind: DaemonSet
 metadata:
   name: velero-node-agent
   namespace: velero
+  labels:
+    component: node-agent
 spec:
   selector:
     matchLabels:
@@ -52,20 +54,29 @@ spec:
     metadata:
       labels:
         component: node-agent
-  spec:
-    serviceAccountName: velero
-    containers:
-    - name: restic
-      image: velero/velero:v1.15.2
-      command:
-      - /velero
-      args:
-      - restic
-      volumeMounts:
-      - mountPath: /host_pods
-        name: host-pods
-        mountPropagation: HostToContainer
-    volumes:
-    - name: host-pods
-      hostPath:
-        path: /var/lib/kubelet/pods
+    spec:
+      serviceAccountName: velero
+      containers:
+      - name: restic
+        image: velero/velero:v1.15.2
+        command:
+          - /velero
+        args:
+          - node-agent
+        securityContext:
+          privileged: true
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          capabilities:
+            drop: ["ALL"]
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+        - mountPath: /host_pods
+          name: host-pods
+          mountPropagation: HostToContainer
+      volumes:
+      - name: host-pods
+        hostPath:
+          path: /var/lib/kubelet/pods
+          type: DirectoryOrCreate
