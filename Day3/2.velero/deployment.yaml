@@ -62,7 +62,7 @@ spec:
             path: /var/lib/kubelet/pods
       containers:
         - name: restic
-          image: velero/velero:v1.10.2
+          image: velero/velero:v1.15.2
           command:
             - /velero
           args:
