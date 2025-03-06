@@ -64,7 +64,7 @@ spec:
         args:
           - node-agent
         securityContext:
-          privileged: true
+          privileged: false  # Ändere von `true` auf `false`
           allowPrivilegeEscalation: false
           runAsNonRoot: true
           capabilities:
