@@ -19,7 +19,7 @@ spec:
               value: "TEST"
             - name: DB_HOST
               value: mysql-test.db.svc.cluster.local
-            - name: USER
+            - name: DB_USER
               valueFrom:
                 secretKeyRef:
                   name: cs-mysql-secret-test

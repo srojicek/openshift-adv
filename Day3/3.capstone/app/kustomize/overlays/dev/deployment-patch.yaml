@@ -19,7 +19,7 @@ spec:
               value: "DEV"
             - name: DB_HOST
               value: mysql-dev.db.svc.cluster.local
-            - name: USER
+            - name: DB_USER
               valueFrom:
                 secretKeyRef:
                   name: cs-mysql-secret-dev
