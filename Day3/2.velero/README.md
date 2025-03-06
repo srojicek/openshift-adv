@@ -53,7 +53,19 @@ velero install   --provider aws   --plugins velero/velero-plugin-for-aws:v1.7.1 
 oc patch deployment velero -n velero --type='json' -p '[{"op": "add", "path": "/spec/template/spec/volumes/-", "value": {"name": "cloud-credentials", "secret": {"secretName": "cloud-credentials"}}}]'
 ```
 
-
+### ** Provide right secret **
+```sh
+cat <<EOF | oc apply -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloud-credentials
+  namespace: velero
+type: Opaque
+data:
+  cloud: $(echo -e "[default]\naws_access_key_id=minioadmin\naws_secret_access_key=minioadmin" | base64 -w0)
+EOF
+```
 
 ## ** Creating a Backup of the `db` Namespace**
 Once Velero is deployed, create a backup of the `db` namespace:
