@@ -39,7 +39,6 @@ spec:
       volumes:
       - name: minio-storage
         emptyDir: {}
-
 ---
 apiVersion: v1
 kind: Service
