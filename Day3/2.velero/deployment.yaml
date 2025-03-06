@@ -7,35 +7,32 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: velero
+      app.kubernetes.io/name: velero
   template:
     metadata:
       labels:
-        app: velero
+        app.kubernetes.io/name: velero
     spec:
       serviceAccountName: velero-sa
-      securityContext:
-        runAsNonRoot: true
-      volumes:
-        - name: velero-storage
-          emptyDir: {}
       containers:
-        - name: velero
-          image: velero/velero:v1.15.2
-          command:
-            - /velero
-          args:
-            - server
-          volumeMounts:
-            - mountPath: /backups
-              name: velero-storage
-          securityContext:
-            allowPrivilegeEscalation: false
-            runAsNonRoot: true
-            capabilities:
-              drop: ["ALL"]
-            seccompProfile:
-              type: RuntimeDefault
+      - name: velero
+        image: velero/velero:v1.15.2
+        command:
+          - /velero
+        args:
+          - server
+        env:
+          - name: VELERO_FEATURES
+            valueFrom:
+              configMapKeyRef:
+                name: restic-config
+                key: enable
+        volumeMounts:
+        - name: plugins
+          mountPath: /plugins
+      volumes:
+      - name: plugins
+        emptyDir: {}
 
 ---
 
@@ -77,3 +74,13 @@ spec:
         hostPath:
           path: /var/lib/kubelet/pods
           type: DirectoryOrCreate
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: restic-config
+  namespace: velero
+data:
+  restic: "true"
