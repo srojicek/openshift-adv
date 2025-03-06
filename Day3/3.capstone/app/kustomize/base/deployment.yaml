@@ -18,6 +18,8 @@ spec:
           env:
             - name: DB_HOST
               value: mysql
+            - name: DB_PORT
+              value: 3306
             - name: USER
               valueFrom:
                 secretKeyRef:
