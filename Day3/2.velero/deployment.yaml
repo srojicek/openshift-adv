@@ -58,6 +58,11 @@ spec:
           - /velero
         args:
           - node-agent
+        env:
+          - name: VELERO_NAMESPACE
+            value: "velero"
+          - name: VELERO_FEATURES
+            value: "EnableNodeAgent,EnableCSI"
         securityContext:
           runAsUser: 1000
           allowPrivilegeEscalation: false
