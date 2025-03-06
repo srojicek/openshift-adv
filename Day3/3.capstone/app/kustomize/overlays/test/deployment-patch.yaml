@@ -13,8 +13,24 @@ spec:
     spec:
       containers:
         - name: node-app
+          image: default-route-openshift-image-registry.apps-crc.testing/test/capstone-app:latest
           env:
             - name: CAPSTONE
               value: "TEST"
             - name: DB_HOST
               value: mysql-test.db.svc.cluster.local
+            - name: USER
+              valueFrom:
+                secretKeyRef:
+                  name: cs-mysql-secret-dev
+                  key: MYSQL_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cs-mysql-secret-dev
+                  key: MYSQL_PASSWORD
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: cs-mysql-secret-dev
+                  key: MYSQL_DATABASE

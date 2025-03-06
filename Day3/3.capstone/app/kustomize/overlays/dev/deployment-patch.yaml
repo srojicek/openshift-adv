@@ -13,6 +13,7 @@ spec:
     spec:
       containers:
         - name: node-app
+          image: default-route-openshift-image-registry.apps-crc.testing/dev/capstone-app:latest
           env:
             - name: CAPSTONE
               value: "DEV"
